@@ -10,9 +10,9 @@
 
 import java.sql.PreparedStatement;
 import java.sql.Connection;
-import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.SQLException;
 
 
 public class ProdutosDAO {
@@ -24,9 +24,23 @@ public class ProdutosDAO {
     
     public void cadastrarProduto (ProdutosDTO produto){
         
-        
-        //conn = new conectaDAO().connectDB();
-        
+        conectaDAO DAO = new conectaDAO();
+        Connection conn = DAO.connectDB();
+        if (conn == null) {            
+                System.out.println("Não foi possível estabelecer a conexão.");
+                return;
+            }        
+        try {
+            
+            prep = conn.prepareStatement("INSERT INTO produtos (nome,valor,status) VALUES(?,?,?)");
+                    prep.setString(1,produto.getNome());
+                    prep.setInt(2,produto.getValor());
+                    prep.setString(3,produto.getStatus());
+                    int status = prep.executeUpdate();
+                    System.out.println("Conexao realizada com sucesso");
+        } catch(SQLException ex){
+            System.out.println("Erro ao conectar:"+ ex.getMessage());
+        }           
         
     }
     
