@@ -36,13 +36,13 @@ public class ProdutosDAO {
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
             int status = prep.executeUpdate();
-            if (status > 0) { 
-            System.out.println("Cadastro realizado com sucesso");
-            return true; 
-        } else {
-            System.out.println("Falha ao cadastrar o produto");
-            return false; 
-        }
+            if (status > 0) {
+                System.out.println("Cadastro realizado com sucesso");
+                return true;
+            } else {
+                System.out.println("Falha ao cadastrar o produto");
+                return false;
+            }
         } catch (SQLException ex) {
             System.out.println("Erro ao conectar:" + ex.getMessage());
             return false;
@@ -83,6 +83,7 @@ public class ProdutosDAO {
         }
 
     }
+
     public List<ProdutosDTO> listarVendas() {
         conectaDAO DAO = new conectaDAO();
         Connection conn = DAO.connectDB();
@@ -115,5 +116,30 @@ public class ProdutosDAO {
             return null;
         }
 
+    }
+
+    public boolean venderProduto(int id) {
+        conectaDAO DAO = new conectaDAO();
+        Connection conn = DAO.connectDB();
+        if (conn == null) {
+            System.out.println("Não foi possível estabelecer a conexão.");
+        }
+
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE status = 'A venda' AND id = ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            int linhas = stmt.executeUpdate();
+            if (linhas > 0) {
+                System.out.println("status do produto atualizado com sucesso");
+                return true;
+            } else {
+                System.out.println("Nenhum produto foi atualizado");
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
