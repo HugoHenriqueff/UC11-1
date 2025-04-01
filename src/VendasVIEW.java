@@ -1,3 +1,8 @@
+
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,8 +19,38 @@ public class VendasVIEW extends javax.swing.JFrame {
      */
     public VendasVIEW() {
         initComponents();
+        listarVendas();
     }
+ private void listarVendas() {
+        try {
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            List<ProdutosDTO> venda = produtosdao.listarVendas();
+            if (venda == null || venda.isEmpty()) {
+                System.out.println("A lista está vazia ou é nula.");
+            } else {
+                System.out.println("A lista contém: " + venda.size() + " itens.");
+            }
 
+            System.out.println("Lista de Produtos: " + venda);
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setNumRows(0);
+            jTable1.setRowSorter(new TableRowSorter(model));
+            model.setNumRows(0);
+
+            for (ProdutosDTO p : venda) {
+                Object[] obj = new Object[]{
+                    p.getId(),
+                    p.getNome(),
+                    p.getValor(),
+                    p.getStatus()
+                };
+                model.addRow(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
